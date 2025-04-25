@@ -1,0 +1,159 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Рассылка: {{ mailing.name }} - Сервис рассылок{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Рассылка: {{ mailing.name }}</h1>
+        <div>
+            {% if mailing.status != 'started' %}
+                <form method="post" action="{% url 'mailing_start' mailing.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-play-fill"></i> Запустить
+                    </button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'mailing_stop' mailing.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="bi bi-stop-fill"></i> Остановить
+                    </button>
+                </form>
+            {% endif %}
+            <a href="{% url 'mailing_update' mailing.id %}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <a href="{% url 'mailing_delete' mailing.id %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Удалить
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Информация о рассылке</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <strong>Статус:</strong>
+                        {% if mailing.status == 'created' %}
+                            <span class="badge bg-secondary">Создана</span>
+                        {% elif mailing.status == 'started' %}
+                            <span class="badge bg-success">Запущена</span>
+                        {% elif mailing.status == 'completed' %}
+                            <span class="badge bg-primary">Завершена</span>
+                        {% endif %}
+                    </p>
+                    <p>
+                        <strong>Периодичность:</strong>
+                        {% if mailing.frequency == 'once' %}
+                            Однократно
+                        {% elif mailing.frequency == 'daily' %}
+                            Ежедневно
+                        {% elif mailing.frequency == 'weekly' %}
+                            Еженедельно
+                        {% elif mailing.frequency == 'monthly' %}
+                            Ежемесячно
+                        {% endif %}
+                    </p>
+                    <p><strong>Начало:</strong> {{ mailing.start_time|date:"d.m.Y H:i" }}</p>
+                    <p><strong>Окончание:</strong> {{ mailing.end_time|date:"d.m.Y H:i" }}</p>
+                    <p><strong>Дата создания:</strong> {{ mailing.created_at|date:"d.m.Y H:i" }}</p>
+                    <p><strong>Дата обновления:</strong> {{ mailing.updated_at|date:"d.m.Y H:i" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Сообщение</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Тема:</strong> {{ mailing.message.subject }}</p>
+                    <h6 class="mt-3">Текст сообщения:</h6>
+                    <div class="card">
+                        <div class="card-body">
+                            {{ mailing.message.body|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Клиенты ({{ mailing.clients.count }})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>ФИО</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in mailing.clients.all %}
+                                    <tr>
+                                        <td>{{ client.email }}</td>
+                                        <td>{{ client.full_name }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-center">Нет клиентов</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Логи отправки ({{ logs|length }})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Клиент</th>
+                                    <th>Статус</th>
+                                    <th>Дата</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>{{ log.client.email }}</td>
+                                        <td>
+                                            {% if log.status == 'success' %}
+                                                <span class="badge bg-success">Успешно</span>
+                                            {% elif log.status == 'failed' %}
+                                                <span class="badge bg-danger">Ошибка</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ log.sent_at|date:"d.m.Y H:i" }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center">Нет логов</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

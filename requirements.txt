@@ -1,0 +1,16 @@
+Django==4.2.7
+django-apscheduler==0.6.2
+APScheduler==3.10.1
+python-dotenv==1.0.0
+sqlparse==0.4.4
+django-anymail==10.1
+django-debug-toolbar==4.2.0
+gunicorn==21.2.0
+whitenoise==6.5.0
+django-cors-headers==4.3.0
+django-csp==3.7
+pytest==7.4.3
+pytest-django==4.5.2
+Sphinx==7.2.6  
+psycopg2-binary==2.9.9 
+redis==5.0.1 

@@ -1,0 +1,53 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Сообщения - Сервис рассылок{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Сообщения</h1>
+        <a href="{% url 'message_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Добавить сообщение
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Тема</th>
+                            <th>Текст</th>
+                            <th>Дата создания</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages %}
+                            <tr>
+                                <td>{{ message.subject }}</td>
+                                <td>{{ message.body|truncatechars:50 }}</td>
+                                <td>{{ message.created_at|date:"d.m.Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'message_detail' message.id %}" class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'message_update' message.id %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'message_delete' message.id %}" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">Нет сообщений</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

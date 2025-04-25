@@ -1,0 +1,208 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Статистика - Сервис рассылок{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        border-radius: 10px;
+        transition: transform 0.3s;
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Статистика рассылок</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Всего рассылок</h5>
+                    <p class="display-4">{{ total_mailings }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card bg-success text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Активные рассылки</h5>
+                    <p class="display-4">{{ active_mailings }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card bg-info text-white">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Всего клиентов</h5>
+                    <p class="display-4">{{ total_clients }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stats-card bg-warning text-dark">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Всего сообщений</h5>
+                    <p class="display-4">{{ total_messages }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Рассылки по статусу</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Статус</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in mailings_by_status %}
+                                <tr>
+                                    <td>
+                                        {% if item.status == 'created' %}
+                                            Создана
+                                        {% elif item.status == 'started' %}
+                                            Запущена
+                                        {% elif item.status == 'completed' %}
+                                            Завершена
+                                        {% else %}
+                                            {{ item.status }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">Нет данных</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Рассылки по периодичности</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Периодичность</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in mailings_by_frequency %}
+                                <tr>
+                                    <td>
+                                        {% if item.frequency == 'once' %}
+                                            Однократно
+                                        {% elif item.frequency == 'daily' %}
+                                            Ежедневно
+                                        {% elif item.frequency == 'weekly' %}
+                                            Еженедельно
+                                        {% elif item.frequency == 'monthly' %}
+                                            Ежемесячно
+                                        {% else %}
+                                            {{ item.frequency }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">Нет данных</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Логи по статусу</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Статус</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in logs_by_status %}
+                                <tr>
+                                    <td>
+                                        {% if item.status == 'success' %}
+                                            Успешно
+                                        {% elif item.status == 'failed' %}
+                                            Ошибка
+                                        {% else %}
+                                            {{ item.status }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.count }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">Нет данных</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Логи по времени</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Период</th>
+                                <th>Количество</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Сегодня</td>
+                                <td>{{ logs_today }}</td>
+                            </tr>
+                            <tr>
+                                <td>За неделю</td>
+                                <td>{{ logs_this_week }}</td>
+                            </tr>
+                            <tr>
+                                <td>За месяц</td>
+                                <td>{{ logs_this_month }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %}Главная - Сервис рассылок{% endblock %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">Сервис управления рассылками</h1>
+                    <p class="col-md-8 fs-4">Создавайте и управляйте email-рассылками для ваших клиентов. Отслеживайте статистику и повышайте эффективность коммуникации.</p>
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Начать бесплатно</a>
+                    {% else %}
+                        <a href="{% url 'mailing_create' %}" class="btn btn-primary btn-lg">Создать рассылку</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 class="mb-4">Ваша статистика</h2>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-dashboard bg-primary text-white">
+                    <div class="card-body">
+                        <i class="bi bi-people"></i>
+                        <h5 class="card-title">Клиенты</h5>
+                        <p class="card-text display-6">{{ total_clients }}</p>
+                        <a href="{% url 'client_list' %}" class="btn btn-light">Управление</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-dashboard bg-success text-white">
+                    <div class="card-body">
+                        <i class="bi bi-chat-left-text"></i>
+                        <h5 class="card-title">Сообщения</h5>
+                        <p class="card-text display-6">{{ total_messages }}</p>
+                        <a href="{% url 'message_list' %}" class="btn btn-light">Управление</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-dashboard bg-info text-white">
+                    <div class="card-body">
+                        <i class="bi bi-envelope"></i>
+                        <h5 class="card-title">Рассылки</h5>
+                        <p class="card-text display-6">{{ total_mailings }}</p>
+                        <a href="{% url 'mailing_list' %}" class="btn btn-light">Управление</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card card-dashboard bg-warning text-dark">
+                    <div class="card-body">
+                        <i class="bi bi-lightning"></i>
+                        <h5 class="card-title">Активные</h5>
+                        <p class="card-text display-6">{{ active_mailings }}</p>
+                        <a href="{% url 'statistics' %}" class="btn btn-dark">Статистика</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 class="mb-4">Возможности сервиса</h2>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-envelope-check me-2"></i>Управление рассылками</h5>
+                        <p class="card-text">Создавайте и настраивайте рассылки с различной периодичностью: разовые, ежедневные, еженедельные и ежемесячные.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-people me-2"></i>Управление клиентами</h5>
+                        <p class="card-text">Создавайте базу клиентов, группируйте их и отправляйте персонализированные сообщения.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-graph-up me-2"></i>Статистика и аналитика</h5>
+                        <p class="card-text">Отслеживайте эффективность рассылок, анализируйте статистику доставки и ошибок.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">О сервисе</h2>
+            <div class="card">
+                <div class="card-body">
+                    <p>Наш сервис рассылок предоставляет удобный инструмент для создания и управления email-рассылками. Вы можете создавать различные типы рассылок, управлять списками клиентов и отслеживать статистику доставки.</p>
+                    <p>Основные преимущества:</p>
+                    <ul>
+                        <li>Простой и удобный интерфейс</li>
+                        <li>Гибкие настройки периодичности рассылок</li>
+                        <li>Детальная статистика по каждой рассылке</li>
+                        <li>Управление базой клиентов</li>
+                        <li>Безопасность и конфиденциальность данных</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

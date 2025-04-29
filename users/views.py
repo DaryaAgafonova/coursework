@@ -1,5 +1,5 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.views import (
     LoginView, LogoutView, 
@@ -11,19 +11,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import redirect
 from django.contrib import messages
 from .forms import UserRegisterForm, UserProfileForm, UserUpdateForm
-from mailings.models import UserProfile
+from users.models import UserProfile
+import pdb
 
 
 class UserRegisterView(CreateView):
     form_class = UserRegisterForm
     template_name = 'mailings/users/register.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('login')  # We'll use this only if get_success_url isn't defined
     
     def form_valid(self, form):
-        response = super().form_valid(form)
-        UserProfile.objects.create(user=self.object)
-        messages.success(self.request, 'Аккаунт успешно создан! Теперь вы можете войти.')
-        return response
+        user = form.save()
+        login(self.request, user)
+        messages.success(self.request, 'Вы успешно зарегистрированы!')
+        return redirect(self.get_success_url())  # Call get_success_url
+
+    def get_success_url(self):
+        return reverse('login')  # Explicitly return the URL by name
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Ошибка при регистрации. Пожалуйста, исправьте ошибки ниже.')
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class UserLoginView(LoginView):

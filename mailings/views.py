@@ -15,7 +15,8 @@ from django.contrib.auth.views import (
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Client, Message, Mailing, MailingLog, UserProfile
+from .models import Client, Message, Mailing, MailingLog
+from users.models import UserProfile
 from .forms import ClientForm, MessageForm, MailingForm, UserRegisterForm, UserProfileForm, UserUpdateForm
 from .services import send_mailing
 

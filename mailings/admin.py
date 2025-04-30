@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Client, Message, Mailing, MailingLog, UserProfile
+from .models import Client, Message, Mailing, MailingLog
+from users.models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):

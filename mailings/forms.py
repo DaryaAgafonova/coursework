@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client, Message, Mailing, UserProfile
+from .models import Client, Message, Mailing
+from users.models import UserProfile
 
 
 class ClientForm(forms.ModelForm):
